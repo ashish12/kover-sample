@@ -38,28 +38,32 @@ tasks.test {
 }
 
 kover {
-    disabledForProject = System.getProperty("disable_coverage")?.toBoolean() ?: false
+    if (System.getProperty("disable_coverage")?.toBoolean() == true) {
+        disable()
+    }
 
     useKoverTool()
 }
 
 koverReport {
-    xml {
-        onCheck = true
-    }
+    defaults {
+        xml {
+            onCheck = true
+        }
 
-    html {
-        onCheck = true
-    }
+        html {
+            onCheck = true
+        }
 
-    verify {
-        onCheck = true
-        rule("Minimal instruction coverage rate in percent") { // add verification rule
-            bound {
-                metric = kotlinx.kover.gradle.plugin.dsl.MetricType.INSTRUCTION // change coverage metric to evaluate (LINE, INSTRUCTION, BRANCH)
-                aggregation = kotlinx.kover.gradle.plugin.dsl.AggregationType.COVERED_PERCENTAGE // change counter value (COVERED_COUNT, MISSED_COUNT, COVERED_PERCENTAGE, MISSED_PERCENTAGE)
+        verify {
+            onCheck = true
+            rule("Minimal instruction coverage rate in percent") { // add verification rule
+                bound {
+                    metric = kotlinx.kover.gradle.plugin.dsl.MetricType.INSTRUCTION // change coverage metric to evaluate (LINE, INSTRUCTION, BRANCH)
+                    aggregation = kotlinx.kover.gradle.plugin.dsl.AggregationType.COVERED_PERCENTAGE // change counter value (COVERED_COUNT, MISSED_COUNT, COVERED_PERCENTAGE, MISSED_PERCENTAGE)
+                }
+                minBound(45)
             }
-            minBound(45)
         }
     }
 }
